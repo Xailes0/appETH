@@ -14,17 +14,149 @@
     }
 
     body {
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #111;
-      min-height: 100vh;
+      background: #050509;
+      color: #fff;
     }
 
-    /* “Téléphone” */
+    /* ÉCRANS (login / app) */
+    .screen {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ---------- LOGIN ---------- */
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 420px;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: radial-gradient(circle at top, #1f2937, #050509);
+      border-radius: 24px;
+      padding: 32px 24px 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .login-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 24px;
+    }
+
+    .login-label {
+      font-size: 13px;
+      color: #e5e7eb;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #4b5563;
+      background: rgba(15, 23, 42, 0.9);
+      color: #f9fafb;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .login-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
+    }
+
+    .login-field {
+      margin-bottom: 16px;
+    }
+
+    .login-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .login-remember {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .login-remember input {
+      accent-color: #3b82f6;
+    }
+
+    .login-forgot {
+      color: #60a5fa;
+      cursor: pointer;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #f9fafb;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(34, 197, 94, 0.35);
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .login-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.25);
+    }
+
+    .login-footer {
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .login-footer span {
+      color: #60a5fa;
+      cursor: pointer;
+    }
+
+    /* ---------- TÉLÉPHONE / APP ---------- */
+
+    .phone-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
     .phone {
       position: relative;
-      width: 390px;          /* taille iPhone 13/14 */
+      width: 390px;
       height: 844px;
       border-radius: 32px;
       overflow: hidden;
@@ -32,22 +164,20 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
-    /* Carte en fond */
     .map {
       position: absolute;
       inset: 0;
-      background-image: url("newmap.png"); /* mets le nom exact de ton image ici */
+      background-image: url("newmap.png"); /* <-- TON IMAGE */
       background-size: cover;
       background-position: center;
     }
 
-    /* Contenu par dessus la carte */
     .ui-overlay {
       position: relative;
       width: 100%;
       height: 100%;
       padding: 16px;
-      pointer-events: none; /* pour que tout soit “cliquable” seulement sur les éléments */
+      pointer-events: none;
     }
 
     /* Barre du haut */
@@ -96,7 +226,9 @@
       color: #fff;
       font-weight: 600;
       font-size: 16px;
+      border: none;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
     }
 
     .launch-play {
@@ -191,7 +323,7 @@
       position: absolute;
       top: 205px;
       left: 150px;
-      background: #2563eb; /* bleu */
+      background: #2563eb;
       color: #fff;
       padding: 8px 16px;
       border-radius: 999px;
@@ -201,7 +333,6 @@
       pointer-events: auto;
     }
 
-    /* Pin de localisation (bleu) */
     .position-dot {
       position: absolute;
       top: 245px;
@@ -212,38 +343,6 @@
       background: #2563eb;
       border: 3px solid #fff;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Gros pins rouges */
-    .pin-red {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      background: #e74c3c;
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-    }
-
-    .pin-red::after {
-      content: "";
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #fff;
-      top: 8px;
-      left: 8px;
-    }
-
-    .pin-red.pin-1 {
-      top: 340px;
-      left: 180px;
-    }
-
-    .pin-red.pin-2 {
-      top: 260px;
-      right: 90px;
     }
 
     /* Bouton flottant bleu en bas à droite */
@@ -273,57 +372,112 @@
   </style>
 </head>
 <body>
-  <div class="phone">
-    <div class="map"></div>
+  <!-- ÉCRAN LOGIN -->
+  <div id="login-screen" class="screen active">
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-title">Connexion</div>
+        <div class="login-subtitle">Connecte-toi pour accéder à la carte ETH.</div>
 
-    <div class="ui-overlay">
-      <!-- Barre du haut -->
-      <div class="top-bar">
-        <!-- Menu -->
-        <div class="icon-btn">
-          <div class="hamburger-lines">
-            <span></span>
-            <span></span>
-            <span></span>
+        <form id="login-form">
+          <div class="login-field">
+            <label class="login-label" for="email">Email ETH</label>
+            <input id="email" type="email" class="login-input" placeholder="prenom.nom@ethz.ch" required />
           </div>
-        </div>
 
-        <!-- Bouton Launch -->
-        <button class="launch-btn">
-          <span class="launch-play"></span>
-          <span>Launch</span>
-        </button>
+          <div class="login-field">
+            <label class="login-label" for="password">Mot de passe</label>
+            <input id="password" type="password" class="login-input" placeholder="••••••••" required />
+          </div>
 
-        <!-- Icônes de droite -->
-        <div class="top-right-icons">
-          <div class="icon-btn">🏆</div>
-          <div class="icon-btn">↻</div>
-        </div>
-      </div>
+          <div class="login-row">
+            <label class="login-remember">
+              <input type="checkbox" />
+              <span>Se souvenir de moi</span>
+            </label>
+            <span class="login-forgot">Mot de passe oublié ?</span>
+          </div>
 
-      <!-- Barre de recherche -->
-      <div class="search-bar">
-        <div class="search-inner">
-          <div class="search-icon"></div>
-          <span class="search-placeholder">Search location...</span>
-        </div>
-      </div>
+          <button type="submit" class="login-btn">Se connecter</button>
 
-      <!-- Zoom -->
-      <div class="zoom-controls">
-        <div class="zoom-btn">+</div>
-        <div class="zoom-btn">−</div>
-        <div class="zoom-label">Zoom: 13</div>
-      </div>
-
-      <!-- You are here -->
-      <div class="you-are-here">You are here</div>
-      <div class="position-dot"></div>
-      <!-- Bouton flottant -->
-      <div class="fab">
-        <div class="fab-icon"></div>
+          <div class="login-footer">
+            Pas encore de compte ? <span>S’inscrire</span>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
+  <!-- ÉCRAN APP -->
+  <div id="app-screen" class="screen">
+    <div class="phone-wrapper">
+      <div class="phone">
+        <div class="map"></div>
+
+        <div class="ui-overlay">
+          <!-- Barre du haut -->
+          <div class="top-bar">
+            <div class="icon-btn">
+              <div class="hamburger-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <button class="launch-btn">
+              <span class="launch-play"></span>
+              <span>Launch</span>
+            </button>
+
+            <div class="top-right-icons">
+              <div class="icon-btn">🏆</div>
+              <div class="icon-btn">↻</div>
+            </div>
+          </div>
+
+          <!-- Barre de recherche -->
+          <div class="search-bar">
+            <div class="search-inner">
+              <div class="search-icon"></div>
+              <span class="search-placeholder">Search location...</span>
+            </div>
+          </div>
+
+          <!-- Zoom -->
+          <div class="zoom-controls">
+            <div class="zoom-btn">+</div>
+            <div class="zoom-btn">−</div>
+            <div class="zoom-label">Zoom: 13</div>
+          </div>
+
+          <!-- You are here -->
+          <div class="you-are-here">You are here</div>
+          <div class="position-dot"></div>
+
+          <!-- PAS DE PINS ROUGES ICI -->
+
+          <!-- Bouton flottant -->
+          <div class="fab">
+            <div class="fab-icon"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Petit script pour passer de l'écran login à l'app
+    const loginForm = document.getElementById('login-form');
+    const loginScreen = document.getElementById('login-screen');
+    const appScreen = document.getElementById('app-screen');
+
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault(); // empêche le rechargement
+      // Ici tu pourrais plus tard vérifier un vrai backend.
+      loginScreen.classList.remove('active');
+      appScreen.classList.add('active');
+    });
+  </script>
 </body>
 </html>
