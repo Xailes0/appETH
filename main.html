@@ -1,657 +1,184 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Image Viewer</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-       
-        /* Page de connexion */
-        .login-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-       
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 450px;
-        }
-       
-        .login-container h2 {
-            margin: 0 0 30px 0;
-            color: #333;
-            text-align: center;
-        }
-       
-        .login-container p {
-            margin: 0 0 20px 0;
-            color: #666;
-            text-align: center;
-            font-size: 14px;
-        }
-       
-        .form-group {
-            margin-bottom: 20px;
-        }
-       
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-       
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-       
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-       
-        .team-colors {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-       
-        .team-option {
-            flex: 1;
-            min-width: 80px;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-            font-weight: 600;
-        }
-       
-        .team-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-       
-        .team-option.selected {
-            border-width: 3px;
-            transform: scale(1.05);
-        }
-       
-        .team-math { background-color: #e74c3c; color: white; }
-        .team-math.selected { border-color: #c0392b; }
-       
-        .team-meca { background-color: #3498db; color: white; }
-        .team-meca.selected { border-color: #2980b9; }
-       
-        .team-physics { background-color: #f39c12; color: white; }
-        .team-physics.selected { border-color: #d68910; }
-       
-        .team-info { background-color: #2ecc71; color: white; }
-        .team-info.selected { border-color: #27ae60; }
-       
-        .team-bio { background-color: #9b59b6; color: white; }
-        .team-bio.selected { border-color: #8e44ad; }
-       
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-       
-        .login-btn:hover {
-            background-color: #5568d3;
-        }
-       
-        .login-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-       
-        .error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-        }
-       
-        .error-message.show {
-            display: block;
-        }
-       
-        /* Page de visualisation */
-        .viewer-page {
-            display: none;
-            flex-direction: column;
-            height: 100vh;
-        }
-       
-        .viewer-page.active {
-            display: flex;
-        }
-       
-        .controls {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-       
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-       
-        button:hover {
-            background-color: #0056b3;
-        }
-       
-        .logout-btn {
-            background-color: #dc3545;
-            margin-left: auto;
-        }
-       
-        .logout-btn:hover {
-            background-color: #c82333;
-        }
-       
-        .leaderboard-btn {
-            background-color: #28a745;
-        }
-       
-        .leaderboard-btn:hover {
-            background-color: #218838;
-        }
-       
-        .zoom-level {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-        }
-       
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: 15px;
-        }
-       
-        .user-greeting {
-            color: #333;
-            font-size: 14px;
-            font-weight: 500;
-        }
-       
-        .user-team {
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-        }
-       
-        .image-container {
-            flex: 1;
-            width: 100%;
-            overflow: auto;
-            background-color: #2a2a2a;
-            cursor: grab;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-       
-        .image-container:active {
-            cursor: grabbing;
-        }
-       
-        .image-container img {
-            display: block;
-            transition: transform 0.2s ease;
-            transform-origin: center center;
-            min-width: 100%;
-            min-height: 100%;
-            object-fit: contain;
-        }
-       
-        /* Leaderboard Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-       
-        .modal.active {
-            display: flex;
-        }
-       
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-       
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-       
-        .modal-header h2 {
-            margin: 0;
-            color: #333;
-        }
-       
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-        }
-       
-        .close-btn:hover {
-            color: #333;
-        }
-       
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            transition: transform 0.2s;
-        }
-       
-        .leaderboard-item:hover {
-            transform: translateX(5px);
-        }
-       
-        .leaderboard-rank {
-            font-size: 24px;
-            font-weight: bold;
-            margin-right: 15px;
-            min-width: 40px;
-            color: #666;
-        }
-       
-        .leaderboard-item:nth-child(1) .leaderboard-rank {
-            color: #ffd700;
-        }
-       
-        .leaderboard-item:nth-child(2) .leaderboard-rank {
-            color: #c0c0c0;
-        }
-       
-        .leaderboard-item:nth-child(3) .leaderboard-rank {
-            color: #cd7f32;
-        }
-       
-        .leaderboard-team {
-            flex: 1;
-            font-weight: 600;
-            font-size: 16px;
-        }
-       
-        .leaderboard-points {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-       
         .points-badge {
             padding: 5px 15px;
             border-radius: 20px;
             color: white;
             font-weight: 600;
         }
-    </style>
-</head>
-<body>
-    <!-- Page de connexion -->
-    <div class="login-page" id="loginPage">
-        <div class="login-container">
-            <h2>Welcome</h2>
-            <p>Please enter your username and select your team</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Enter your username">
-                </div>
-               
-                <div class="form-group">
-                    <label>Select Your Team</label>
-                    <div class="team-colors">
-                        <div class="team-option team-math" data-team="math">Math</div>
-                        <div class="team-option team-meca" data-team="meca">Mechanical Engineering</div>
-                        <div class="team-option team-physics" data-team="physics">Physics</div>
-                        <div class="team-option team-info" data-team="info">Computer Science</div>
-                        <div class="team-option team-bio" data-team="bio">Biology</div>
-                    </div>
-                </div>
-               
-                <button type="submit" class="login-btn" id="submitBtn" disabled>Sign In</button>
-                <div class="error-message" id="errorMessage">
-                    Please enter a username and select a team
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Page de visualisation -->
-    <div class="viewer-page" id="viewerPage">
-        <div class="controls">
-            <button id="zoomOut">Zoom -</button>
-            <span class="zoom-level" id="zoomLevel">100%</span>
-            <button id="zoomIn">Zoom +</button>
-            <button id="resetZoom">Reset</button>
-            <button class="leaderboard-btn" id="leaderboardBtn">🏆 Leaderboard</button>
-            <div class="user-info">
-                <span class="user-greeting" id="userGreeting"></span>
-                <span class="user-team" id="userTeamBadge"></span>
-            </div>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
-        </div>
        
-        <div class="image-container" id="container">
-            <img id="image" src="map.png" alt="Image viewer">
-        </div>
-    </div>
-
-    <!-- Leaderboard Modal -->
-    <div class="modal" id="leaderboardModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🏆 Team Leaderboard</h2>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            <div id="leaderboardContent"></div>
-        </div>
-    </div>
-
-    <script>
-        // Données des équipes
-        const teams = {
-            math: { name: 'Mathematics', color: '#e74c3c', points: 0 },
-            meca: { name: 'Mechanical Engineering', color: '#3498db', points: 0 },
-            physics: { name: 'Physics', color: '#f39c12', points: 0 },
-            info: { name: 'Computer Science', color: '#2ecc71', points: 0 },
-            bio: { name: 'Biology', color: '#9b59b6', points: 0 }
-        };
-
-        // Variables utilisateur
-        let currentUser = '';
-        let currentTeam = '';
-        let selectedTeam = null;
-
-        // Éléments DOM
-        const loginPage = document.getElementById('loginPage');
-        const viewerPage = document.getElementById('viewerPage');
-        const loginForm = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('errorMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userGreeting = document.getElementById('userGreeting');
-        const userTeamBadge = document.getElementById('userTeamBadge');
-        const leaderboardBtn = document.getElementById('leaderboardBtn');
-        const leaderboardModal = document.getElementById('leaderboardModal');
-        const closeModal = document.getElementById('closeModal');
-        const leaderboardContent = document.getElementById('leaderboardContent');
-
-        // Sélection d'équipe
-        const teamOptions = document.querySelectorAll('.team-option');
-        teamOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                teamOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedTeam = option.dataset.team;
-                submitBtn.disabled = false;
-            });
-        });
-
-        // Connexion
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-           
-            const username = document.getElementById('username').value.trim();
-           
-            if (username && selectedTeam) {
-                currentUser = username;
-                currentTeam = selectedTeam;
-               
-                // Ajouter des points à l'équipe (exemple: +10 points à la connexion)
-                teams[currentTeam].points += 10;
-               
-                errorMessage.classList.remove('show');
-                loginPage.style.display = 'none';
-                viewerPage.classList.add('active');
-                userGreeting.textContent = `${currentUser}`;
-                userTeamBadge.textContent = teams[currentTeam].name;
-                userTeamBadge.style.backgroundColor = teams[currentTeam].color;
-            } else {
-                errorMessage.classList.add('show');
-            }
-        });
-
-        // Déconnexion
-        logoutBtn.addEventListener('click', () => {
-            viewerPage.classList.remove('active');
-            loginPage.style.display = 'flex';
-            document.getElementById('username').value = '';
-            teamOptions.forEach(opt => opt.classList.remove('selected'));
-            selectedTeam = null;
-            submitBtn.disabled = true;
-            errorMessage.classList.remove('show');
-            currentUser = '';
-            currentTeam = '';
-        });
-
-        // Afficher le leaderboard
-        function updateLeaderboard() {
-            const sortedTeams = Object.entries(teams)
-                .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => b.points - a.points);
-
-            leaderboardContent.innerHTML = sortedTeams.map((team, index) => `
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">${index + 1}</div>
-                    <div class="leaderboard-team">${team.name}</div>
-                    <div class="leaderboard-points">
-                        <span class="points-badge" style="background-color: ${team.color}">${team.points} pts</span>
-                    </div>
-                </div>
-            `).join('');
+        /* Pointeur "You are here" */
+        .location-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #e74c3c;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: move;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
         }
-
-        leaderboardBtn.addEventListener('click', () => {
-            updateLeaderboard();
-            leaderboardModal.classList.add('active');
-        });
-
-        closeModal.addEventListener('click', () => {
-            leaderboardModal.classList.remove('active');
-        });
-
-        leaderboardModal.addEventListener('click', (e) => {
-            if (e.target === leaderboardModal) {
-                leaderboardModal.classList.remove('active');
-            }
-        });
-
-        // Gestion du zoom et du déplacement
-        const img = document.getElementById('image');
-        const container = document.getElementById('container');
-        const zoomInBtn = document.getElementById('zoomIn');
-        const zoomOutBtn = document.getElementById('zoomOut');
-        const resetBtn = document.getElementById('resetZoom');
-        const zoomLevelDisplay = document.getElementById('zoomLevel');
-
-        let scale = 1;
-        const zoomStep = 0.2;
-        const minScale = 1;
-        const maxScale = 5;
-
-        let isDragging = false;
-        let startX, startY, scrollLeft, scrollTop;
-
-        function updateZoom() {
-            img.style.transform = `scale(${scale})`;
-            zoomLevelDisplay.textContent = Math.round(scale * 100) + '%';
+       
+        .location-marker:hover {
+            transform: scale(1.1);
         }
-
-        function constrainScroll() {
-            const maxScrollLeft = container.scrollWidth - container.clientWidth;
-            const maxScrollTop = container.scrollHeight - container.clientHeight;
-           
-            if (container.scrollLeft < 0) container.scrollLeft = 0;
-            if (container.scrollLeft > maxScrollLeft) container.scrollLeft = maxScrollLeft;
-            if (container.scrollTop < 0) container.scrollTop = 0;
-            if (container.scrollTop > maxScrollTop) container.scrollTop = maxScrollTop;
+       
+        .location-marker::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
-
-        zoomInBtn.addEventListener('click', () => {
-            if (scale < maxScale) {
-                scale += zoomStep;
-                updateZoom();
-            }
-        });
-
-        zoomOutBtn.addEventListener('click', () => {
-            if (scale > minScale) {
-                scale -= zoomStep;
-                updateZoom();
-            }
-        });
-
-        resetBtn.addEventListener('click', () => {
-            scale = 1;
-            updateZoom();
-            container.scrollLeft = 0;
-            container.scrollTop = 0;
-        });
-
-        container.addEventListener('wheel', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-                const newScale = scale + delta;
-                if (newScale >= minScale && newScale <= maxScale) {
-                    scale = newScale;
-                    updateZoom();
-                }
-            } else {
-                constrainScroll();
-            }
-        });
-
-        container.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.pageX - container.offsetLeft;
-            startY = e.pageY - container.offsetTop;
-            scrollLeft = container.scrollLeft;
-            scrollTop = container.scrollTop;
-        });
-
-        container.addEventListener('mouseleave', () => {
-            isDragging = false;
-        });
-
-        container.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        container.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.pageX - container.offsetLeft;
-            const y = e.pageY - container.offsetTop;
-            const walkX = (x - startX) * 2;
-            const walkY = (y - startY) * 2;
-            container.scrollLeft = scrollLeft - walkX;
-            container.scrollTop = scrollTop - walkY;
-            constrainScroll();
-        });
-
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        container.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].pageX - container.offsetLeft;
-            touchStartY = e.touches[0].pageY - container.offsetTop;
-            scrollLeft = container.scrollLeft;
-            scrollTop = container.scrollTop;
-        });
-
-        container.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const x = e.touches[0].pageX - container.offsetLeft;
-            const y = e.touches[0].pageY - container.offsetTop;
-            const walkX = (x - touchStartX) * 2;
-            const walkY = (y - touchStartY) * 2;
-            container.scrollLeft = scrollLeft - walkX;
-            container.scrollTop = scrollTop - walkY;
-            constrainScroll();
-        });
-
-        container.addEventListener('scroll', constrainScroll);
-    </script>
-</body>
-</html>
+       
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+       
+        .location-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+       
+        .location-label::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0,0,0,0.8);
+        }
+       
+        /* Bâtiments cliquables */
+        .building {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+            border-radius: 5px;
+        }
+       
+        .building:hover {
+            transform: scale(1.05);
+            border-color: #007bff;
+            box-shadow: 0 4px 12px rgba(0,123,255,0.4);
+        }
+       
+        .building img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+       
+        /* Modal pour modifier les bâtiments */
+        .building-modal .modal-content {
+            max-width: 600px;
+        }
+       
+        .building-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+        }
+       
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+       
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+       
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+        }
+       
+        .file-input-label:hover {
+            background-color: #0056b3;
+        }
+       
+        .building-info {
+            margin-bottom: 20px;
+        }
+       
+        .building-info label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+       
+        .building-info input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+       
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+       
+        .modal-actions button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+       
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+        }
+       
+        .btn-save:hover {
+            background-color: #218838;
+        }
+       
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+       
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+    </style>
