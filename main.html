@@ -1,568 +1,297 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>ETH Map App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>ETH Map App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #111;
-      min-height: 100vh;
-    }
+body {
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 
-    /* Phone frame */
-    .phone {
-      position: relative;
-      width: 390px;          /* iPhone 13/14 size */
-      height: 844px;
-      border-radius: 32px;
-      overflow: hidden;
-      background: #000;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    }
+/* PHONE */
+.phone {
+  width: 390px;
+  height: 844px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  position: relative;
+  color: #fff;
+}
 
-    /* Screens logic */
-    .screen {
-      position: absolute;
-      inset: 0;
-      display: none;
-    }
+/* SCREENS */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
 
-    .screen.active {
-      display: block;
-    }
+.screen.active {
+  display: flex;
+}
 
-    /* ---------- LOGIN SCREEN ---------- */
-    #login-screen {
-      background: radial-gradient(circle at top, #1f2933 0%, #05070a 60%, #000 100%);
-      color: #fff;
-      padding: 32px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: stretch;
-      gap: 24px;
-    }
+/* ---------- LOGIN ---------- */
+#login {
+  background: radial-gradient(circle at top, #1f2937, #020617);
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px;
+  gap: 16px;
+}
 
-    .login-header {
-      text-align: center;
-      margin-bottom: 8px;
-    }
+#login h1 {
+  font-size: 28px;
+  text-align: center;
+}
 
-    .login-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+#login p {
+  font-size: 14px;
+  opacity: 0.7;
+  text-align: center;
+}
 
-    .login-subtitle {
-      font-size: 14px;
-      opacity: 0.7;
-    }
+.input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #fff;
+}
 
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 8px;
-    }
+.button {
+  padding: 12px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-    .field-label {
-      font-size: 13px;
-      opacity: 0.8;
-      margin-bottom: 4px;
-    }
+/* ---------- SECTION ---------- */
+#section {
+  background: #020617;
+  flex-direction: column;
+  padding: 24px;
+}
 
-    .text-input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(10, 12, 18, 0.95);
-      color: #f9fafb;
-      font-size: 14px;
-      outline: none;
-    }
+#section h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
 
-    .text-input::placeholder {
-      color: rgba(156, 163, 175, 0.9);
-    }
+#section p {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-bottom: 16px;
+}
 
-    .text-input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
-    }
+.section-btn {
+  padding: 14px;
+  border-radius: 14px;
+  background: #020617;
+  border: 1px solid #374151;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
 
-    .login-btn {
-      margin-top: 8px;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #2563eb, #22c55e);
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.7);
-    }
+.section-btn:hover {
+  background: #2563eb;
+}
 
-    .login-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 6px 12px rgba(15, 23, 42, 0.7);
-    }
+/* ---------- MAP ---------- */
+#map-screen {
+  background: #000;
+}
 
-    .login-footer {
-      margin-top: 12px;
-      font-size: 12px;
-      text-align: center;
-      opacity: 0.6;
-    }
+/* Map container */
+.map-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
 
-    /* ---------- SECTION SELECTION SCREEN ---------- */
-    #section-screen {
-      background: radial-gradient(circle at top, #020617 0%, #020617 40%, #000 100%);
-      color: #fff;
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-    }
+.map {
+  width: 100%;
+  height: 100%;
+  background-image: url("newmage.png");
+  background-size: cover;
+  background-position: center;
+  transform: translate(0,0) scale(1);
+  cursor: grab;
+}
 
-    .section-header {
-      margin-top: 32px;
-      margin-bottom: 16px;
-    }
+.map:active {
+  cursor: grabbing;
+}
 
-    .section-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+/* UI overlay */
+.ui {
+  position: relative;
+  inset: 0;
+  padding: 16px;
+  pointer-events: none;
+}
 
-    .section-subtitle {
-      font-size: 14px;
-      opacity: 0.7;
-    }
+/* Zoom buttons */
+.zoom {
+  position: absolute;
+  left: 16px;
+  top: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+}
 
-    .section-list {
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+.zoom button {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+}
 
-    .section-btn {
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
+/* Leaderboard */
+.leaderboard {
+  position: absolute;
+  top: 90px;
+  right: 12px;
+  width: 160px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 14px;
+  padding: 10px;
+  font-size: 12px;
+  pointer-events: auto;
+}
 
-    .section-btn span:first-child {
-      font-weight: 500;
-    }
+.leaderboard h3 {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
 
-    .section-btn span:last-child {
-      font-size: 12px;
-      opacity: 0.7;
-    }
-
-    .section-btn:hover {
-      border-color: #2563eb;
-      background: rgba(15, 23, 42, 1);
-    }
-
-    .section-footer {
-      margin-top: auto;
-      font-size: 12px;
-      text-align: center;
-      opacity: 0.5;
-      padding-bottom: 16px;
-    }
-
-    /* ---------- MAP SCREEN ---------- */
-
-    /* Map background uses your file "newmage.png" */
-    .map {
-      position: absolute;
-      inset: 0;
-      background-image: url("newmap.png"); /* change extension if needed */
-      background-size: cover;
-      background-position: center;
-    }
-
-    .ui-overlay {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding: 16px;
-      pointer-events: none;
-    }
-
-    /* Top bar */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 12px;
-      pointer-events: auto;
-    }
-
-    .icon-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.85);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      font-size: 16px;
-    }
-
-    .hamburger-lines {
-      width: 16px;
-      height: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .hamburger-lines span {
-      height: 2px;
-      border-radius: 2px;
-      background: #333;
-    }
-
-    .launch-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 24px;
-      border-radius: 999px;
-      background: #26a653;
-      color: #fff;
-      font-weight: 600;
-      font-size: 16px;
-      border: none;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-      pointer-events: auto;
-    }
-
-    .launch-play {
-      width: 0;
-      height: 0;
-      border-top: 7px solid transparent;
-      border-bottom: 7px solid transparent;
-      border-left: 10px solid #fff;
-    }
-
-    .top-right-icons {
-      display: flex;
-      gap: 8px;
-    }
-
-    /* Search bar */
-    .search-bar {
-      margin-top: 12px;
-      pointer-events: auto;
-    }
-
-    .search-inner {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 10px 14px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
-
-    .search-icon {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #777;
-      position: relative;
-    }
-
-    .search-icon::after {
-      content: "";
-      position: absolute;
-      width: 2px;
-      height: 7px;
-      background: #777;
-      border-radius: 2px;
-      right: -4px;
-      bottom: -1px;
-      transform: rotate(45deg);
-    }
-
-    .search-placeholder {
-      color: #999;
-      font-size: 14px;
-    }
-
-    /* Zoom controls */
-    .zoom-controls {
-      position: absolute;
-      top: 160px;
-      left: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: auto;
-    }
-
-    .zoom-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    }
-
-    .zoom-label {
-      padding: 6px 10px;
-      border-radius: 8px;
-      background: #fff;
-      font-size: 12px;
-      color: #444;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      align-self: flex-start;
-    }
-
-    /* You are here */
-    .you-are-here {
-      position: absolute;
-      top: 205px;
-      left: 150px;
-      background: #2563eb;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-      pointer-events: auto;
-    }
-
-    .position-dot {
-      position: absolute;
-      top: 245px;
-      left: 190px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #2563eb;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Floating action button (bottom right) */
-    .fab {
-      position: absolute;
-      right: 24px;
-      bottom: 32px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #2563eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
-      pointer-events: auto;
-    }
-
-    .fab-icon {
-      width: 0;
-      height: 0;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      border-left: 16px solid #fff;
-      transform: translateX(2px) rotate(10deg);
-    }
-  </style>
+.lb-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+</style>
 </head>
+
 <body>
-  <div class="phone">
+<div class="phone">
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="screen active">
-      <div class="login-header">
-        <div class="login-title">Welcome back</div>
-        <div class="login-subtitle">Sign in to access your ETH campus map</div>
-      </div>
+<!-- LOGIN -->
+<div id="login" class="screen active">
+  <h1>Welcome</h1>
+  <p>Sign in to access ETH Campus Map</p>
+  <input class="input" placeholder="Email">
+  <input class="input" type="password" placeholder="Password">
+  <button class="button" onclick="goSection()">Login</button>
+</div>
 
-      <form id="login-form" class="login-form">
-        <div>
-          <div class="field-label">Email</div>
-          <input
-            type="email"
-            class="text-input"
-            placeholder="you@example.ch"
-            required
-          />
-        </div>
+<!-- SECTION -->
+<div id="section" class="screen">
+  <h2>Choose your department</h2>
+  <p>This will customize your campus experience</p>
 
-        <div>
-          <div class="field-label">Password</div>
-          <input
-            type="password"
-            class="text-input"
-            placeholder="••••••••"
-            required
-          />
-        </div>
+  <button class="section-btn" onclick="goMap()">Mechanical Engineering</button>
+  <button class="section-btn" onclick="goMap()">Computer Science</button>
+  <button class="section-btn" onclick="goMap()">Mathematics</button>
+  <button class="section-btn" onclick="goMap()">Physics</button>
+  <button class="section-btn" onclick="goMap()">Electrical Engineering</button>
+</div>
 
-        <button type="submit" class="login-btn">Continue</button>
-      </form>
-
-      <div class="login-footer">
-        This is a demo login – no real account required.
-      </div>
-    </div>
-
-    <!-- SECTION SELECTION SCREEN -->
-    <div id="section-screen" class="screen">
-      <div class="section-header">
-        <div class="section-title">Choose your section</div>
-        <div class="section-subtitle">So we can highlight your main buildings</div>
-      </div>
-
-      <div class="section-list">
-        <button class="section-btn" data-section="Mechanical Engineering">
-          <span>Mechanical Engineering</span>
-          <span>Design, dynamics & energy</span>
-        </button>
-        <button class="section-btn" data-section="Computer Science">
-          <span>Computer Science</span>
-          <span>Software, AI & systems</span>
-        </button>
-        <button class="section-btn" data-section="Mathematics">
-          <span>Mathematics</span>
-          <span>Analysis, algebra & geometry</span>
-        </button>
-        <button class="section-btn" data-section="Physics">
-          <span>Physics</span>
-          <span>Particles, quantum & more</span>
-        </button>
-        <button class="section-btn" data-section="Electrical Engineering">
-          <span>Electrical Engineering</span>
-          <span>Circuits, signals & power</span>
-        </button>
-      </div>
-
-      <div class="section-footer">
-        You can change this later in your settings.
-      </div>
-    </div>
-
-    <!-- MAP SCREEN -->
-    <div id="map-screen" class="screen">
-      <div class="map"></div>
-
-      <div class="ui-overlay">
-        <!-- Top bar -->
-        <div class="top-bar">
-          <!-- Menu -->
-          <div class="icon-btn">
-            <div class="hamburger-lines">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-
-          <!-- Launch button -->
-          <button class="launch-btn">
-            <span class="launch-play"></span>
-            <span>Launch</span>
-          </button>
-
-          <!-- Right icons -->
-          <div class="top-right-icons">
-            <div class="icon-btn">🏆</div>
-            <div class="icon-btn">↻</div>
-          </div>
-        </div>
-
-        <!-- Search bar -->
-        <div class="search-bar">
-          <div class="search-inner">
-            <div class="search-icon"></div>
-            <span class="search-placeholder">Search location...</span>
-          </div>
-        </div>
-
-        <!-- Zoom -->
-        <div class="zoom-controls">
-          <div class="zoom-btn">+</div>
-          <div class="zoom-btn">−</div>
-          <div class="zoom-label">Zoom: 13</div>
-        </div>
-
-        <!-- You are here -->
-        <div class="you-are-here">You are here</div>
-        <div class="position-dot"></div>
-
-        <!-- Floating button -->
-        <div class="fab">
-          <div class="fab-icon"></div>
-        </div>
-      </div>
-    </div>
+<!-- MAP -->
+<div id="map-screen" class="screen">
+  <div class="map-container">
+    <div id="map" class="map"></div>
   </div>
 
-  <script>
-    // Simple navigation logic: login -> section -> map
+  <div class="ui">
+    <!-- Zoom -->
+    <div class="zoom">
+      <button onclick="zoomIn()">+</button>
+      <button onclick="zoomOut()">−</button>
+    </div>
 
-    const loginScreen = document.getElementById("login-screen");
-    const sectionScreen = document.getElementById("section-screen");
-    const mapScreen = document.getElementById("map-screen");
-    const loginForm = document.getElementById("login-form");
-    const sectionButtons = document.querySelectorAll(".section-btn");
+    <!-- Leaderboard -->
+    <div class="leaderboard">
+      <h3>Leaderboard</h3>
+      <div class="lb-item"><span>Computer Science</span><span>120</span></div>
+      <div class="lb-item"><span>Mechanical Eng.</span><span>98</span></div>
+      <div class="lb-item"><span>Physics</span><span>87</span></div>
+      <div class="lb-item"><span>Mathematics</span><span>80</span></div>
+    </div>
+  </div>
+</div>
 
-    let selectedSection = null;
+</div>
 
-    // When login is submitted, go to "choose section"
-    loginForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      loginScreen.classList.remove("active");
-      sectionScreen.classList.add("active");
-    });
+<script>
+/* Navigation */
+function goSection() {
+  document.getElementById("login").classList.remove("active");
+  document.getElementById("section").classList.add("active");
+}
 
-    // When a section is chosen, go to the map
-    sectionButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        selectedSection = btn.getAttribute("data-section");
-        console.log("Section chosen:", selectedSection);
-        sectionScreen.classList.remove("active");
-        mapScreen.classList.add("active");
-      });
-    });
-  </script>
+function goMap() {
+  document.getElementById("section").classList.remove("active");
+  document.getElementById("map-screen").classList.add("active");
+}
+
+/* Map pan & zoom */
+let scale = 1;
+let x = 0;
+let y = 0;
+let drag = false;
+let startX, startY;
+const map = document.getElementById("map");
+
+map.addEventListener("mousedown", e => {
+  drag = true;
+  startX = e.clientX - x;
+  startY = e.clientY - y;
+});
+
+window.addEventListener("mouseup", () => drag = false);
+
+window.addEventListener("mousemove", e => {
+  if (!drag) return;
+  x = e.clientX - startX;
+  y = e.clientY - startY;
+  updateMap();
+});
+
+function zoomIn() {
+  scale = Math.min(scale + 0.2, 3);
+  updateMap();
+}
+
+function zoomOut() {
+  scale = Math.max(scale - 0.2, 1);
+  updateMap();
+}
+
+function updateMap() {
+  map.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+}
+</script>
 </body>
 </html>
