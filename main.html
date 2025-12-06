@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ETH Map App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      min-height: 100vh;
+    }
+
+    /* “Téléphone” */
+    .phone {
+      position: relative;
+      width: 390px;          /* taille iPhone 13/14 */
+      height: 844px;
+      border-radius: 32px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Carte en fond */
+    .map {
+      position: absolute;
+      inset: 0;
+      background-image: url("map.png"); /* mets le nom exact de ton image ici */
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Contenu par dessus la carte */
+    .ui-overlay {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 16px;
+      pointer-events: none; /* pour que tout soit “cliquable” seulement sur les éléments */
+    }
+
+    /* Barre du haut */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      pointer-events: auto;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
+    }
+
+    .hamburger-lines {
+      width: 16px;
+      height: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger-lines span {
+      height: 2px;
+      border-radius: 2px;
+      background: #333;
+    }
+
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      background: #26a653;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .launch-play {
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 10px solid #fff;
+    }
+
+    .top-right-icons {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Barre de recherche */
+    .search-bar {
+      margin-top: 12px;
+      pointer-events: auto;
+    }
+
+    .search-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .search-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #777;
+      position: relative;
+    }
+
+    .search-icon::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 7px;
+      background: #777;
+      border-radius: 2px;
+      right: -4px;
+      bottom: -1px;
+      transform: rotate(45deg);
+    }
+
+    .search-placeholder {
+      color: #999;
+      font-size: 14px;
+    }
+
+    /* Contrôles de zoom */
+    .zoom-controls {
+      position: absolute;
+      top: 160px;
+      left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .zoom-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    .zoom-label {
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 12px;
+      color: #444;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      align-self: flex-start;
+    }
+
+    /* Bulle “You are here” */
+    .you-are-here {
+      position: absolute;
+      top: 205px;
+      left: 150px;
+      background: #2563eb; /* bleu */
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    /* Pin de localisation (bleu) */
+    .position-dot {
+      position: absolute;
+      top: 245px;
+      left: 190px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #2563eb;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Gros pins rouges */
+    .pin-red {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: #e74c3c;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .pin-red::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      top: 8px;
+      left: 8px;
+    }
+
+    .pin-red.pin-1 {
+      top: 340px;
+      left: 180px;
+    }
+
+    .pin-red.pin-2 {
+      top: 260px;
+      right: 90px;
+    }
+
+    /* Bouton flottant bleu en bas à droite */
+    .fab {
+      position: absolute;
+      right: 24px;
+      bottom: 32px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+      pointer-events: auto;
+    }
+
+    .fab-icon {
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 16px solid #fff;
+      transform: translateX(2px) rotate(10deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="map"></div>
+
+    <div class="ui-overlay">
+      <!-- Barre du haut -->
+      <div class="top-bar">
+        <!-- Menu -->
+        <div class="icon-btn">
+          <div class="hamburger-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <!-- Bouton Launch -->
+        <button class="launch-btn">
+          <span class="launch-play"></span>
+          <span>Launch</span>
+        </button>
+
+        <!-- Icônes de droite -->
+        <div class="top-right-icons">
+          <div class="icon-btn">🏆</div>
+          <div class="icon-btn">↻</div>
+        </div>
+      </div>
+
+      <!-- Barre de recherche -->
+      <div class="search-bar">
+        <div class="search-inner">
+          <div class="search-icon"></div>
+          <span class="search-placeholder">Search location...</span>
+        </div>
+      </div>
+
+      <!-- Zoom -->
+      <div class="zoom-controls">
+        <div class="zoom-btn">+</div>
+        <div class="zoom-btn">−</div>
+        <div class="zoom-label">Zoom: 13</div>
+      </div>
+
+      <!-- You are here -->
+      <div class="you-are-here">You are here</div>
+      <div class="position-dot"></div>
+
+      <!-- Pins rouges -->
+      <div class="pin-red pin-1"></div>
+      <div class="pin-red pin-2"></div>
+
+      <!-- Bouton flottant -->
+      <div class="fab">
+        <div class="fab-icon"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
