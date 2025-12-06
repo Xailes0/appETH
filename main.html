@@ -14,149 +14,17 @@
     }
 
     body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #050509;
-      color: #fff;
     }
 
-    /* ÉCRANS (login / app) */
-    .screen {
-      display: none;
-      width: 100%;
-      height: 100vh;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .screen.active {
-      display: flex;
-    }
-
-    /* ---------- LOGIN ---------- */
-
-    .login-wrapper {
-      width: 100%;
-      max-width: 420px;
-      padding: 24px;
-    }
-
-    .login-card {
-      background: radial-gradient(circle at top, #1f2937, #050509);
-      border-radius: 24px;
-      padding: 32px 24px 28px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .login-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .login-subtitle {
-      font-size: 14px;
-      color: #9ca3af;
-      margin-bottom: 24px;
-    }
-
-    .login-label {
-      font-size: 13px;
-      color: #e5e7eb;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    .login-input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #4b5563;
-      background: rgba(15, 23, 42, 0.9);
-      color: #f9fafb;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .login-input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
-    }
-
-    .login-field {
-      margin-bottom: 16px;
-    }
-
-    .login-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    .login-remember {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .login-remember input {
-      accent-color: #3b82f6;
-    }
-
-    .login-forgot {
-      color: #60a5fa;
-      cursor: pointer;
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #f9fafb;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(34, 197, 94, 0.35);
-      margin-top: 4px;
-      margin-bottom: 12px;
-    }
-
-    .login-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.25);
-    }
-
-    .login-footer {
-      text-align: center;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    .login-footer span {
-      color: #60a5fa;
-      cursor: pointer;
-    }
-
-    /* ---------- TÉLÉPHONE / APP ---------- */
-
-    .phone-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-
+    /* Phone frame */
     .phone {
       position: relative;
-      width: 390px;
+      width: 390px;          /* iPhone 13/14 size */
       height: 844px;
       border-radius: 32px;
       overflow: hidden;
@@ -164,10 +32,177 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
+    /* Screens logic */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* ---------- LOGIN SCREEN ---------- */
+    #login-screen {
+      background: radial-gradient(circle at top, #1f2933 0%, #05070a 60%, #000 100%);
+      color: #fff;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      gap: 24px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .login-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(10, 12, 18, 0.95);
+      color: #f9fafb;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .text-input::placeholder {
+      color: rgba(156, 163, 175, 0.9);
+    }
+
+    .text-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+    }
+
+    .login-btn {
+      margin-top: 8px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.7);
+    }
+
+    .login-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 12px rgba(15, 23, 42, 0.7);
+    }
+
+    .login-footer {
+      margin-top: 12px;
+      font-size: 12px;
+      text-align: center;
+      opacity: 0.6;
+    }
+
+    /* ---------- SECTION SELECTION SCREEN ---------- */
+    #section-screen {
+      background: radial-gradient(circle at top, #020617 0%, #020617 40%, #000 100%);
+      color: #fff;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-header {
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .section-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-btn {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .section-btn span:first-child {
+      font-weight: 500;
+    }
+
+    .section-btn span:last-child {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .section-btn:hover {
+      border-color: #2563eb;
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .section-footer {
+      margin-top: auto;
+      font-size: 12px;
+      text-align: center;
+      opacity: 0.5;
+      padding-bottom: 16px;
+    }
+
+    /* ---------- MAP SCREEN ---------- */
+
+    /* Map background uses your file "newmage.png" */
     .map {
       position: absolute;
       inset: 0;
-      background-image: url("newmap.png"); /* <-- TON IMAGE */
+      background-image: url("newmap.png"); /* change extension if needed */
       background-size: cover;
       background-position: center;
     }
@@ -180,7 +215,7 @@
       pointer-events: none;
     }
 
-    /* Barre du haut */
+    /* Top bar */
     .top-bar {
       display: flex;
       align-items: center;
@@ -228,7 +263,7 @@
       font-size: 16px;
       border: none;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
+      pointer-events: auto;
     }
 
     .launch-play {
@@ -244,7 +279,7 @@
       gap: 8px;
     }
 
-    /* Barre de recherche */
+    /* Search bar */
     .search-bar {
       margin-top: 12px;
       pointer-events: auto;
@@ -285,7 +320,7 @@
       font-size: 14px;
     }
 
-    /* Contrôles de zoom */
+    /* Zoom controls */
     .zoom-controls {
       position: absolute;
       top: 160px;
@@ -318,7 +353,7 @@
       align-self: flex-start;
     }
 
-    /* Bulle “You are here” */
+    /* You are here */
     .you-are-here {
       position: absolute;
       top: 205px;
@@ -345,7 +380,7 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
-    /* Bouton flottant bleu en bas à droite */
+    /* Floating action button (bottom right) */
     .fab {
       position: absolute;
       right: 24px;
@@ -372,111 +407,161 @@
   </style>
 </head>
 <body>
-  <!-- ÉCRAN LOGIN -->
-  <div id="login-screen" class="screen active">
-    <div class="login-wrapper">
-      <div class="login-card">
-        <div class="login-title">Connexion</div>
-        <div class="login-subtitle">Connecte-toi pour accéder à la carte ETH.</div>
+  <div class="phone">
 
-        <form id="login-form">
-          <div class="login-field">
-            <label class="login-label" for="email">Email ETH</label>
-            <input id="email" type="email" class="login-input" placeholder="prenom.nom@ethz.ch" required />
-          </div>
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="screen active">
+      <div class="login-header">
+        <div class="login-title">Welcome back</div>
+        <div class="login-subtitle">Sign in to access your ETH campus map</div>
+      </div>
 
-          <div class="login-field">
-            <label class="login-label" for="password">Mot de passe</label>
-            <input id="password" type="password" class="login-input" placeholder="••••••••" required />
-          </div>
+      <form id="login-form" class="login-form">
+        <div>
+          <div class="field-label">Email</div>
+          <input
+            type="email"
+            class="text-input"
+            placeholder="you@example.ch"
+            required
+          />
+        </div>
 
-          <div class="login-row">
-            <label class="login-remember">
-              <input type="checkbox" />
-              <span>Se souvenir de moi</span>
-            </label>
-            <span class="login-forgot">Mot de passe oublié ?</span>
-          </div>
+        <div>
+          <div class="field-label">Password</div>
+          <input
+            type="password"
+            class="text-input"
+            placeholder="••••••••"
+            required
+          />
+        </div>
 
-          <button type="submit" class="login-btn">Se connecter</button>
+        <button type="submit" class="login-btn">Continue</button>
+      </form>
 
-          <div class="login-footer">
-            Pas encore de compte ? <span>S’inscrire</span>
-          </div>
-        </form>
+      <div class="login-footer">
+        This is a demo login – no real account required.
       </div>
     </div>
-  </div>
 
-  <!-- ÉCRAN APP -->
-  <div id="app-screen" class="screen">
-    <div class="phone-wrapper">
-      <div class="phone">
-        <div class="map"></div>
+    <!-- SECTION SELECTION SCREEN -->
+    <div id="section-screen" class="screen">
+      <div class="section-header">
+        <div class="section-title">Choose your section</div>
+        <div class="section-subtitle">So we can highlight your main buildings</div>
+      </div>
 
-        <div class="ui-overlay">
-          <!-- Barre du haut -->
-          <div class="top-bar">
-            <div class="icon-btn">
-              <div class="hamburger-lines">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+      <div class="section-list">
+        <button class="section-btn" data-section="Mechanical Engineering">
+          <span>Mechanical Engineering</span>
+          <span>Design, dynamics & energy</span>
+        </button>
+        <button class="section-btn" data-section="Computer Science">
+          <span>Computer Science</span>
+          <span>Software, AI & systems</span>
+        </button>
+        <button class="section-btn" data-section="Mathematics">
+          <span>Mathematics</span>
+          <span>Analysis, algebra & geometry</span>
+        </button>
+        <button class="section-btn" data-section="Physics">
+          <span>Physics</span>
+          <span>Particles, quantum & more</span>
+        </button>
+        <button class="section-btn" data-section="Electrical Engineering">
+          <span>Electrical Engineering</span>
+          <span>Circuits, signals & power</span>
+        </button>
+      </div>
+
+      <div class="section-footer">
+        You can change this later in your settings.
+      </div>
+    </div>
+
+    <!-- MAP SCREEN -->
+    <div id="map-screen" class="screen">
+      <div class="map"></div>
+
+      <div class="ui-overlay">
+        <!-- Top bar -->
+        <div class="top-bar">
+          <!-- Menu -->
+          <div class="icon-btn">
+            <div class="hamburger-lines">
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
-
-            <button class="launch-btn">
-              <span class="launch-play"></span>
-              <span>Launch</span>
-            </button>
-
-            <div class="top-right-icons">
-              <div class="icon-btn">🏆</div>
-              <div class="icon-btn">↻</div>
-            </div>
           </div>
 
-          <!-- Barre de recherche -->
-          <div class="search-bar">
-            <div class="search-inner">
-              <div class="search-icon"></div>
-              <span class="search-placeholder">Search location...</span>
-            </div>
+          <!-- Launch button -->
+          <button class="launch-btn">
+            <span class="launch-play"></span>
+            <span>Launch</span>
+          </button>
+
+          <!-- Right icons -->
+          <div class="top-right-icons">
+            <div class="icon-btn">🏆</div>
+            <div class="icon-btn">↻</div>
           </div>
+        </div>
 
-          <!-- Zoom -->
-          <div class="zoom-controls">
-            <div class="zoom-btn">+</div>
-            <div class="zoom-btn">−</div>
-            <div class="zoom-label">Zoom: 13</div>
+        <!-- Search bar -->
+        <div class="search-bar">
+          <div class="search-inner">
+            <div class="search-icon"></div>
+            <span class="search-placeholder">Search location...</span>
           </div>
+        </div>
 
-          <!-- You are here -->
-          <div class="you-are-here">You are here</div>
-          <div class="position-dot"></div>
+        <!-- Zoom -->
+        <div class="zoom-controls">
+          <div class="zoom-btn">+</div>
+          <div class="zoom-btn">−</div>
+          <div class="zoom-label">Zoom: 13</div>
+        </div>
 
-          <!-- PAS DE PINS ROUGES ICI -->
+        <!-- You are here -->
+        <div class="you-are-here">You are here</div>
+        <div class="position-dot"></div>
 
-          <!-- Bouton flottant -->
-          <div class="fab">
-            <div class="fab-icon"></div>
-          </div>
+        <!-- Floating button -->
+        <div class="fab">
+          <div class="fab-icon"></div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Petit script pour passer de l'écran login à l'app
-    const loginForm = document.getElementById('login-form');
-    const loginScreen = document.getElementById('login-screen');
-    const appScreen = document.getElementById('app-screen');
+    // Simple navigation logic: login -> section -> map
 
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault(); // empêche le rechargement
-      // Ici tu pourrais plus tard vérifier un vrai backend.
-      loginScreen.classList.remove('active');
-      appScreen.classList.add('active');
+    const loginScreen = document.getElementById("login-screen");
+    const sectionScreen = document.getElementById("section-screen");
+    const mapScreen = document.getElementById("map-screen");
+    const loginForm = document.getElementById("login-form");
+    const sectionButtons = document.querySelectorAll(".section-btn");
+
+    let selectedSection = null;
+
+    // When login is submitted, go to "choose section"
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      loginScreen.classList.remove("active");
+      sectionScreen.classList.add("active");
+    });
+
+    // When a section is chosen, go to the map
+    sectionButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        selectedSection = btn.getAttribute("data-section");
+        console.log("Section chosen:", selectedSection);
+        sectionScreen.classList.remove("active");
+        mapScreen.classList.add("active");
+      });
     });
   </script>
 </body>
