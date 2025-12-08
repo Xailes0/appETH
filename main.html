@@ -1,910 +1,413 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Image Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscillateur Harmonique Forcé</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+        * {
             margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
+            padding: 0;
+            box-sizing: border-box;
         }
-       
-        /* Page de connexion */
-        .login-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-       
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 450px;
-        }
-       
-        .login-container h2 {
-            margin: 0 0 30px 0;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
             color: #333;
-            text-align: center;
         }
-       
-        .login-container p {
-            margin: 0 0 20px 0;
-            color: #666;
-            text-align: center;
-            font-size: 14px;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-       
-        .form-group {
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             margin-bottom: 20px;
         }
-       
-        .form-group label {
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
             display: block;
             margin-bottom: 8px;
+            font-weight: 600;
             color: #555;
-            font-weight: 500;
         }
-       
-        .form-group input, .form-group select {
+
+        .label-help {
+            font-size: 0.85em;
+            color: #888;
+            font-weight: normal;
+        }
+
+        input[type="number"] {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
             transition: border-color 0.3s;
         }
-       
-        .form-group input:focus, .form-group select:focus {
+
+        input[type="number"]:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #2a5298;
         }
-       
-        .team-colors {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-       
-        .team-option {
-            flex: 1;
-            min-width: 80px;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-            font-weight: 600;
-        }
-       
-        .team-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-       
-        .team-option.selected {
-            border-width: 3px;
-            transform: scale(1.05);
-        }
-       
-        .team-math { background-color: #e74c3c; color: white; }
-        .team-math.selected { border-color: #c0392b; }
-       
-        .team-meca { background-color: #3498db; color: white; }
-        .team-meca.selected { border-color: #2980b9; }
-       
-        .team-physics { background-color: #f39c12; color: white; }
-        .team-physics.selected { border-color: #d68910; }
-       
-        .team-info { background-color: #2ecc71; color: white; }
-        .team-info.selected { border-color: #27ae60; }
-       
-        .team-bio { background-color: #9b59b6; color: white; }
-        .team-bio.selected { border-color: #8e44ad; }
-       
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-       
-        .login-btn:hover {
-            background-color: #5568d3;
-        }
-       
-        .login-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-       
-        .error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-        }
-       
-        .error-message.show {
-            display: block;
-        }
-       
-        /* Page de visualisation */
-        .viewer-page {
-            display: none;
-            flex-direction: column;
-            height: 100vh;
-        }
-       
-        .viewer-page.active {
-            display: flex;
-        }
-       
-        .controls {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-       
+
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-       
-        button:hover {
-            background-color: #0056b3;
-        }
-       
-        .logout-btn {
-            background-color: #dc3545;
-            margin-left: auto;
-        }
-       
-        .logout-btn:hover {
-            background-color: #c82333;
-        }
-       
-        .leaderboard-btn {
-            background-color: #28a745;
-        }
-       
-        .leaderboard-btn:hover {
-            background-color: #218838;
-        }
-       
-        .zoom-level {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-        }
-       
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: 15px;
-        }
-       
-        .user-greeting {
-            color: #333;
-            font-size: 14px;
-            font-weight: 500;
-        }
-       
-        .user-team {
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-        }
-       
-        .image-container {
-            flex: 1;
             width: 100%;
-            overflow: auto;
-            background-color: #2a2a2a;
-            cursor: grab;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-       
-        .image-container:active {
-            cursor: grabbing;
-        }
-       
-        .image-container img {
-            display: block;
-            transition: transform 0.2s ease;
-            transform-origin: center center;
-            min-width: 100%;
-            min-height: 100%;
-            object-fit: contain;
-        }
-       
-        /* Pointeur "You are here" */
-        .location-marker {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background-color: #e74c3c;
-            border: 3px solid white;
-            border-radius: 50%;
-            cursor: move;
-            z-index: 100;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-       
-        .location-marker:hover {
-            transform: scale(1.1);
-        }
-       
-        .location-marker::after {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background-color: white;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-       
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-       
-        .location-label {
-            position: absolute;
-            top: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0,0,0,0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            white-space: nowrap;
-            font-size: 12px;
-            font-weight: 600;
-            pointer-events: none;
-        }
-       
-        .location-label::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-top-color: rgba(0,0,0,0.8);
-        }
-       
-        /* Bâtiments cliquables */
-        .building {
-            position: absolute;
-            cursor: pointer;
-            transition: transform 0.2s;
-            border: 2px solid transparent;
-            border-radius: 5px;
-            z-index: 50;
-        }
-       
-        .building:hover {
-            transform: scale(1.05);
-            border-color: #007bff;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.4);
-        }
-       
-        .building img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 3px;
-        }
-       
-        /* Leaderboard Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-       
-        .modal.active {
-            display: flex;
-        }
-       
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-       
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-       
-        .modal-header h2 {
-            margin: 0;
-            color: #333;
-        }
-       
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-        }
-       
-        .close-btn:hover {
-            color: #333;
-        }
-       
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
             padding: 15px;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
             border-radius: 8px;
-            background-color: #f8f9fa;
-            transition: transform 0.2s;
-        }
-       
-        .leaderboard-item:hover {
-            transform: translateX(5px);
-        }
-       
-        .leaderboard-rank {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
-            margin-right: 15px;
-            min-width: 40px;
-            color: #666;
-        }
-       
-        .leaderboard-item:nth-child(1) .leaderboard-rank {
-            color: #ffd700;
-        }
-       
-        .leaderboard-item:nth-child(2) .leaderboard-rank {
-            color: #c0c0c0;
-        }
-       
-        .leaderboard-item:nth-child(3) .leaderboard-rank {
-            color: #cd7f32;
-        }
-       
-        .leaderboard-team {
-            flex: 1;
-            font-weight: 600;
-            font-size: 16px;
-        }
-       
-        .leaderboard-points {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-       
-        .points-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            color: white;
-            font-weight: 600;
-        }
-       
-        /* Modal pour modifier les bâtiments */
-        .building-modal .modal-content {
-            max-width: 600px;
-        }
-       
-        .building-preview {
-            width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 2px solid #ddd;
-        }
-       
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-       
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: -9999px;
-        }
-       
-        .file-input-label {
-            display: block;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-       
-        .file-input-label:hover {
-            background-color: #0056b3;
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-       
-        .building-info {
-            margin-bottom: 20px;
+
+        button:active {
+            transform: translateY(0);
         }
-       
-        .building-info label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
         }
-       
-        .building-info input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
+
+        .result-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
         }
-       
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+
+        .result-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .result-detail {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            border-left: 4px solid #2a5298;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
             margin-top: 20px;
         }
-       
-        .modal-actions button {
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
+
+        .info-section {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            line-height: 1.6;
         }
-       
-        .btn-save {
-            background-color: #28a745;
-            color: white;
-        }
-       
-        .btn-save:hover {
-            background-color: #218838;
-        }
-       
-        .btn-cancel {
-            background-color: #6c757d;
-            color: white;
-        }
-       
-        .btn-cancel:hover {
-            background-color: #5a6268;
+
+        .info-section strong {
+            color: #1e3c72;
         }
     </style>
 </head>
 <body>
-    <!-- Page de connexion -->
-    <div class="login-page" id="loginPage">
-        <div class="login-container">
-            <h2>Welcome</h2>
-            <p>Please enter your username and select your team</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Enter your username">
-                </div>
-               
-                <div class="form-group">
-                    <label>Select Your Team</label>
-                    <div class="team-colors">
-                        <div class="team-option team-math" data-team="math">Math</div>
-                        <div class="team-option team-meca" data-team="meca">Mechanical Engineering</div>
-                        <div class="team-option team-physics" data-team="physics">Physics</div>
-                        <div class="team-option team-info" data-team="info">Computer Science</div>
-                        <div class="team-option team-bio" data-team="bio">Biology</div>
-                    </div>
-                </div>
-               
-                <button type="submit" class="login-btn" id="submitBtn" disabled>Sign In</button>
-                <div class="error-message" id="errorMessage">
-                    Please enter a username and select a team
-                </div>
-            </form>
-        </div>
-    </div>
+    <div class="container">
+        <header>
+            <h1>🌊 Oscillateur Harmonique Forcé</h1>
+            <p class="subtitle">Calcul de l'amplitude en fonction de la fréquence d'excitation</p>
+        </header>
 
-    <!-- Page de visualisation -->
-    <div class="viewer-page" id="viewerPage">
-        <div class="controls">
-            <button id="zoomOut">Zoom -</button>
-            <span class="zoom-level" id="zoomLevel">100%</span>
-            <button id="zoomIn">Zoom +</button>
-            <button id="resetZoom">Reset</button>
-            <button class="leaderboard-btn" id="leaderboardBtn">🏆 Leaderboard</button>
-            <div class="user-info">
-                <span class="user-greeting" id="userGreeting"></span>
-                <span class="user-team" id="userTeamBadge"></span>
-            </div>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
-        </div>
-       
-        <div class="image-container" id="container">
-            <img id="image" src="map.png" alt="Image viewer">
-            <!-- Pointeur "You are here" -->
-            <div class="location-marker" id="locationMarker">
-                <div class="location-label">You are here</div>
-            </div>
-            <!-- Bâtiments (exemples) -->
-            <div class="building" id="building1" style="left: 200px; top: 150px; width: 80px; height: 80px;">
-                <img src="https://via.placeholder.com/80/3498db/ffffff?text=Building+1" alt="Building 1">
-            </div>
-            <div class="building" id="building2" style="left: 400px; top: 250px; width: 100px; height: 100px;">
-                <img src="https://via.placeholder.com/100/e74c3c/ffffff?text=Building+2" alt="Building 2">
-            </div>
-            <div class="building" id="building3" style="left: 600px; top: 180px; width: 90px; height: 90px;">
-                <img src="https://via.placeholder.com/90/2ecc71/ffffff?text=Building+3" alt="Building 3">
-            </div>
-        </div>
-    </div>
+        <div class="main-content">
+            <div class="card">
+                <h2>Paramètres du système</h2>
+                
+                <div class="input-group">
+                    <label>
+                        Masse (m) <span class="label-help">en kg</span>
+                    </label>
+                    <input type="number" id="masse" value="1" step="0.1" min="0.1">
+                </div>
 
-    <!-- Leaderboard Modal -->
-    <div class="modal" id="leaderboardModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🏆 Team Leaderboard</h2>
-                <button class="close-btn" id="closeModal">&times;</button>
+                <div class="input-group">
+                    <label>
+                        Constante de raideur (k) <span class="label-help">en N/m</span>
+                    </label>
+                    <input type="number" id="raideur" value="100" step="1" min="1">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        Coefficient d'amortissement (γ) <span class="label-help">en kg/s</span>
+                    </label>
+                    <input type="number" id="amortissement" value="2" step="0.1" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        Force d'excitation (F₀) <span class="label-help">en N</span>
+                    </label>
+                    <input type="number" id="force" value="10" step="0.5" min="0.1">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        Fréquence angulaire d'excitation (ω) <span class="label-help">en rad/s</span>
+                    </label>
+                    <input type="number" id="omega" value="10" step="0.1" min="0.1">
+                </div>
+
+                <button onclick="calculer()">Calculer l'amplitude</button>
+
+                <div class="info-section">
+                    <strong>Fréquence propre (ω₀):</strong> <span id="omega0">-</span> rad/s<br>
+                    <strong>Facteur de qualité (Q):</strong> <span id="facteurQ">-</span><br>
+                    <strong>Régime:</strong> <span id="regime">-</span>
+                </div>
             </div>
-            <div id="leaderboardContent"></div>
+
+            <div class="card">
+                <h2>Résultats</h2>
+                
+                <div class="result-box">
+                    <h3>Amplitude du système</h3>
+                    <div class="result-value" id="amplitude">-</div>
+                    <div class="result-detail">mètres</div>
+                </div>
+
+                <div class="formula-box">
+                    A = F₀ / √[(m(ω₀² - ω²))² + (γω)²]
+                </div>
+
+                <div class="result-box" style="margin-top: 15px;">
+                    <h3>Phase (φ)</h3>
+                    <div class="result-value" id="phase" style="font-size: 2em;">-</div>
+                    <div class="result-detail">radians (<span id="phaseDeg">-</span>°)</div>
+                </div>
+            </div>
         </div>
-    </div>
-   
-    <!-- Building Edit Modal -->
-    <div class="modal building-modal" id="buildingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🏢 Edit Building</h2>
-                <button class="close-btn" id="closeBuildingModal">&times;</button>
-            </div>
-            <div class="building-info">
-                <label for="buildingName">Building Name</label>
-                <input type="text" id="buildingName" placeholder="Enter building name">
-            </div>
-            <img id="buildingPreview" class="building-preview" src="" alt="Building preview">
-            <div class="file-input-wrapper">
-                <input type="file" id="buildingImageInput" accept="image/*">
-                <label for="buildingImageInput" class="file-input-label">📁 Choose Image</label>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" id="cancelBuildingEdit">Cancel</button>
-                <button class="btn-save" id="saveBuildingEdit">Save Changes</button>
+
+        <div class="card">
+            <h2>Courbe de résonance - Amplitude en fonction de ω</h2>
+            <div class="chart-container">
+                <canvas id="resonanceChart"></canvas>
             </div>
         </div>
     </div>
 
     <script>
-        // Données des équipes
-        const teams = {
-            math: { name: 'Mathematics', color: '#e74c3c', points: 0 },
-            meca: { name: 'Mechanical Engineering', color: '#3498db', points: 0 },
-            physics: { name: 'Physics', color: '#f39c12', points: 0 },
-            info: { name: 'Computer Science', color: '#2ecc71', points: 0 },
-            bio: { name: 'Biology', color: '#9b59b6', points: 0 }
-        };
+        let chart = null;
 
-        // Variables utilisateur
-        let currentUser = '';
-        let currentTeam = '';
-        let selectedTeam = null;
+        function calculer() {
+            const m = parseFloat(document.getElementById('masse').value);
+            const k = parseFloat(document.getElementById('raideur').value);
+            const gamma = parseFloat(document.getElementById('amortissement').value);
+            const F0 = parseFloat(document.getElementById('force').value);
+            const omega = parseFloat(document.getElementById('omega').value);
 
-        // Éléments DOM
-        const loginPage = document.getElementById('loginPage');
-        const viewerPage = document.getElementById('viewerPage');
-        const loginForm = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('errorMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userGreeting = document.getElementById('userGreeting');
-        const userTeamBadge = document.getElementById('userTeamBadge');
-        const leaderboardBtn = document.getElementById('leaderboardBtn');
-        const leaderboardModal = document.getElementById('leaderboardModal');
-        const closeModal = document.getElementById('closeModal');
-        const leaderboardContent = document.getElementById('leaderboardContent');
+            // Fréquence propre
+            const omega0 = Math.sqrt(k / m);
+            
+            // Facteur de qualité
+            const Q = (m * omega0) / gamma;
 
-        // Sélection d'équipe
-        const teamOptions = document.querySelectorAll('.team-option');
-        teamOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                teamOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedTeam = option.dataset.team;
-                submitBtn.disabled = false;
-            });
-        });
+            // Calcul de l'amplitude
+            const numerateur = F0;
+            const terme1 = m * (omega0 * omega0 - omega * omega);
+            const terme2 = gamma * omega;
+            const denominateur = Math.sqrt(terme1 * terme1 + terme2 * terme2);
+            const amplitude = numerateur / denominateur;
 
-        // Connexion
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-           
-            const username = document.getElementById('username').value.trim();
-           
-            if (username && selectedTeam) {
-                currentUser = username;
-                currentTeam = selectedTeam;
-               
-                // Ajouter des points à l'équipe (exemple: +10 points à la connexion)
-                teams[currentTeam].points += 10;
-               
-                errorMessage.classList.remove('show');
-                loginPage.style.display = 'none';
-                viewerPage.classList.add('active');
-                userGreeting.textContent = `${currentUser}`;
-                userTeamBadge.textContent = teams[currentTeam].name;
-                userTeamBadge.style.backgroundColor = teams[currentTeam].color;
+            // Calcul de la phase
+            const phase = Math.atan2(gamma * omega, m * (omega0 * omega0 - omega * omega));
+            const phaseDeg = phase * 180 / Math.PI;
+
+            // Déterminer le régime
+            let regime = '';
+            if (gamma === 0) {
+                regime = 'Non amorti';
+            } else if (gamma < 2 * Math.sqrt(k * m)) {
+                regime = 'Sous-amorti';
+            } else if (gamma === 2 * Math.sqrt(k * m)) {
+                regime = 'Critique';
             } else {
-                errorMessage.classList.add('show');
+                regime = 'Sur-amorti';
             }
-        });
 
-        // Déconnexion
-        logoutBtn.addEventListener('click', () => {
-            viewerPage.classList.remove('active');
-            loginPage.style.display = 'flex';
-            document.getElementById('username').value = '';
-            teamOptions.forEach(opt => opt.classList.remove('selected'));
-            selectedTeam = null;
-            submitBtn.disabled = true;
-            errorMessage.classList.remove('show');
-            currentUser = '';
-            currentTeam = '';
-        });
+            // Affichage des résultats
+            document.getElementById('amplitude').textContent = amplitude.toFixed(4);
+            document.getElementById('phase').textContent = phase.toFixed(4);
+            document.getElementById('phaseDeg').textContent = phaseDeg.toFixed(2);
+            document.getElementById('omega0').textContent = omega0.toFixed(2);
+            document.getElementById('facteurQ').textContent = Q.toFixed(2);
+            document.getElementById('regime').textContent = regime;
 
-        // Afficher le leaderboard
-        function updateLeaderboard() {
-            const sortedTeams = Object.entries(teams)
-                .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => b.points - a.points);
-
-            leaderboardContent.innerHTML = sortedTeams.map((team, index) => `
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">${index + 1}</div>
-                    <div class="leaderboard-team">${team.name}</div>
-                    <div class="leaderboard-points">
-                        <span class="points-badge" style="background-color: ${team.color}">${team.points} pts</span>
-                    </div>
-                </div>
-            `).join('');
+            // Tracer le graphique
+            tracerGraphique(m, k, gamma, F0, omega0);
         }
 
-        leaderboardBtn.addEventListener('click', () => {
-            updateLeaderboard();
-            leaderboardModal.classList.add('active');
-        });
+        function tracerGraphique(m, k, gamma, F0, omega0) {
+            const omegaValues = [];
+            const amplitudeValues = [];
 
-        closeModal.addEventListener('click', () => {
-            leaderboardModal.classList.remove('active');
-        });
-
-        leaderboardModal.addEventListener('click', (e) => {
-            if (e.target === leaderboardModal) {
-                leaderboardModal.classList.remove('active');
+            // Générer les points pour le graphique
+            const omegaMax = omega0 * 3;
+            const steps = 200;
+            
+            for (let i = 0; i <= steps; i++) {
+                const w = (omegaMax / steps) * i + 0.1;
+                const terme1 = m * (omega0 * omega0 - w * w);
+                const terme2 = gamma * w;
+                const A = F0 / Math.sqrt(terme1 * terme1 + terme2 * terme2);
+                
+                omegaValues.push(w);
+                amplitudeValues.push(A);
             }
-        });
 
-        // Gestion du zoom et du déplacement
-        const img = document.getElementById('image');
-        const container = document.getElementById('container');
-        const zoomInBtn = document.getElementById('zoomIn');
-        const zoomOutBtn = document.getElementById('zoomOut');
-        const resetBtn = document.getElementById('resetZoom');
-        const zoomLevelDisplay = document.getElementById('zoomLevel');
-
-        let scale = 1;
-        const zoomStep = 0.2;
-        const minScale = 1;
-        const maxScale = 5;
-
-        let isDragging = false;
-        let startX, startY, scrollLeft, scrollTop;
-
-        function updateZoom() {
-            img.style.transform = `scale(${scale})`;
-            zoomLevelDisplay.textContent = Math.round(scale * 100) + '%';
-        }
-
-        function constrainScroll() {
-            const maxScrollLeft = container.scrollWidth - container.clientWidth;
-            const maxScrollTop = container.scrollHeight - container.clientHeight;
-           
-            if (container.scrollLeft < 0) container.scrollLeft = 0;
-            if (container.scrollLeft > maxScrollLeft) container.scrollLeft = maxScrollLeft;
-            if (container.scrollTop < 0) container.scrollTop = 0;
-            if (container.scrollTop > maxScrollTop) container.scrollTop = maxScrollTop;
-        }
-
-        zoomInBtn.addEventListener('click', () => {
-            if (scale < maxScale) {
-                scale += zoomStep;
-                updateZoom();
+            const ctx = document.getElementById('resonanceChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
             }
-        });
 
-        zoomOutBtn.addEventListener('click', () => {
-            if (scale > minScale) {
-                scale -= zoomStep;
-                updateZoom();
-            }
-        });
-
-        resetBtn.addEventListener('click', () => {
-            scale = 1;
-            updateZoom();
-            container.scrollLeft = 0;
-            container.scrollTop = 0;
-        });
-
-        container.addEventListener('wheel', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-                const newScale = scale + delta;
-                if (newScale >= minScale && newScale <= maxScale) {
-                    scale = newScale;
-                    updateZoom();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: omegaValues,
+                    datasets: [{
+                        label: 'Amplitude (m)',
+                        data: amplitudeValues,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'A = ' + context.parsed.y.toFixed(4) + ' m';
+                                },
+                                title: function(context) {
+                                    return 'ω = ' + context[0].parsed.x.toFixed(2) + ' rad/s';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fréquence angulaire ω (rad/s)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1);
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Amplitude (m)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    }
                 }
-            } else {
-                constrainScroll();
-            }
-        });
+            });
+        }
 
-        container.addEventListener('mousedown', (e) => {
-            if (e.target === container || e.target === img) {
-                isDragging = true;
-                startX = e.pageX - container.offsetLeft;
-                startY = e.pageY - container.offsetTop;
-                scrollLeft = container.scrollLeft;
-                scrollTop = container.scrollTop;
-            }
-        });
-
-        container.addEventListener('mouseleave', () => {
-            isDragging = false;
-        });
-
-        container.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        container.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.pageX - container.offsetLeft;
-            const y = e.pageY - container.offsetTop;
-            const walkX = (x - startX) * 2;
-            const walkY = (y - startY) * 2;
-            container.scrollLeft = scrollLeft - walkX;
-            container.scrollTop = scrollTop - walkY;
-            constrainScroll();
-        });
-
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        container.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].pageX - container.offsetLeft;
-            touchStartY = e.touches[0].pageY - container.offsetTop;
-            scrollLeft = container.scrollLeft;
-            scrollTop = container.scrollTop;
-        });
-
-        container.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const x = e.touches[0].pageX - container.offsetLeft;
-            const y = e.touches[0].pageY - container.offsetTop;
-            const walkX = (x - touchStartX) * 2;
-            const walkY = (y - touchStartY) * 2;
-            container.scrollLeft = scrollLeft - walkX;
-            container.scrollTop = scrollTop - walkY;
-            constrainScroll();
-        });
-
-        container.addEventListener('scroll', constrainScroll);
-       
-        // Gestion du pointeur "You are here"
-        const locationMarker = document.getElementById('locationMarker');
-        let isMarkerDragging = false;
-        let markerStartX, markerStartY;
-        let markerLeft = 100, markerTop = 100; // Position initiale
-
-        locationMarker.style.left = markerLeft + 'px';
-        locationMarker.style.top = markerTop + 'px';
-
-        locationMarker.addEventListener('mousedown', (e) => {
-            e.stopPropagation();
-            isMarkerDragging = true;
-            markerStartX = e.clientX - markerLeft;
-            markerStartY = e.clientY - markerTop;
-            locationMarker.style.cursor = 'grabbing';
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isMarkerDragging) return;
-            e.preventDefault();
-            markerLeft = e.clientX - markerStartX;
-            markerTop = e.clientY - markerStartY;
-            locationMarker.style.left = markerLeft + 'px';
-            locationMarker.style.top = markerTop + 'px';
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isMarkerDragging) {
-                isMarkerDragging = false;
-                locationMarker.style.cursor = 'move';
-            }
-        });
-
-        // Gestion des bâtiments
-        const buildingModal = document.getElementById('buildingModal');
-        const closeBuildingModal = document.getElementById('closeBuildingModal');
-        const cancelBuildingEdit = document.getElementById('cancelBuildingEdit');
-        const saveBuildingEdit = document.
+        // Calculer au chargement
+        window.onload = function() {
+            calculer();
+        };
+    </script>
+</body>
+</html>
